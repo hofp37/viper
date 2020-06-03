@@ -11,7 +11,6 @@ from datetime import datetime
 from urllib.parse import urlencode
 from constants import Constant
 
-
 # Set headers
 headers = requests.utils.default_headers()
 headers.update(
@@ -43,13 +42,12 @@ def render_page(url):
     driver.get(url)
     time.sleep(3)
     r = driver.page_source
-    # driver.quit()
     return r
 
-def returnInt(value):
+def return_int(value):
     return int(value.replace(" ", ""))
 
-def getDatetime():
+def get_date_time():
     now = datetime.now()
     return now.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -60,50 +58,50 @@ soup = BeautifulSoup(r, "html.parser")
 average = 0
 value = ""
 price = 0
-sumTotal = 0
-itemsTotal = 0
-priceListTotal = 0
-manufacturerListTotal = []
-modelListTotal = []
-mileageListTotal = []
-yearManufacturedListTotal = []
-datetimeListTotal = []
+sum_total = 0
+items_total = 0
+price_list_total = 0
+manufacturer_list_total = []
+model_list_total = []
+mileage_list_total = []
+year_manufactured_list_total = []
+datetime_list_total = []
 
-def scrapePrice():
+def scrape():
     sum = 0
     items = 0
-    priceList = []
-    manufacturerList = []
-    modelList = []
-    mileageList = []
-    yearManufacturedList = []
-    datetimeList = []
+    price_list = []
+    manufacturer_list = []
+    model_list = []
+    mileage_list = []
+    year_manufactured_list = []
+    datetime_list = []
     for i in soup.select('.price strong:not(#pvContent .price strong)'):
-        sum += returnInt(i.text)
+        sum += return_int(i.text)
         manufacturer = driver.find_elements_by_css_selector(".carBoxContent h1")[0].text
-        manufacturerList.insert(items, manufacturer)
+        manufacturer_list.insert(items, manufacturer)
         model = driver.find_element_by_css_selector(".modelBox h1").text
-        modelList.insert(items, model)
+        model_list.insert(items, model)
         yearManufactured = driver.find_elements_by_css_selector(".content dl")[items].find_elements_by_css_selector("dd")[1].text
-        yearManufacturedList.insert(items, returnInt(yearManufactured))
+        year_manufactured_list.insert(items, return_int(yearManufactured))
         mileage = driver.find_elements_by_css_selector(".content dl")[items].find_elements_by_css_selector("dd")[2].text
-        mileageList.insert(items, returnInt(re.sub("[^\\d]", "", mileage)))
-        datetime = getDatetime()
-        datetimeList.insert(items, datetime)
-        priceList.insert(items, returnInt(i.text))
+        mileage_list.insert(items, return_int(re.sub("[^\\d]", "", mileage)))
+        datetime = get_date_time()
+        datetime_list.insert(items, datetime)
+        price_list.insert(items, return_int(i.text))
         items += 1
-    result = (sum, items, priceList, manufacturerList, modelList, mileageList, yearManufacturedList, datetimeList)     
+    result = (sum, items, price_list, manufacturer_list, model_list, mileage_list, year_manufactured_list, datetime_list)     
     return result
 
-tuple = scrapePrice()
-sumTotal = tuple[0]
-itemsTotal = tuple[1]
-priceListTotal = tuple[2]
-manufacturerListTotal = tuple[3]
-modelListTotal = tuple[4]
-mileageListTotal = tuple[5]
-yearManufacturedListTotal = tuple[6]
-datetimeListTotal = tuple[7]
+tuple = scrape()
+sum_total = tuple[0]
+items_total = tuple[1]
+price_list_total = tuple[2]
+manufacturer_list_total = tuple[3]
+model_list_total = tuple[4]
+mileage_list_total = tuple[5]
+year_manufactured_list_total = tuple[6]
+datetime_list_total = tuple[7]
 
 def check_exists_by_cssSelector(css):
     try:
@@ -114,30 +112,30 @@ def check_exists_by_cssSelector(css):
         return False
     return True
 
-elementString = "#nextPage"
+element_string = "#nextPage"
 
-while check_exists_by_cssSelector(elementString):
-    driver.find_element_by_css_selector(elementString).click()
+while check_exists_by_cssSelector(element_string):
+    driver.find_element_by_css_selector(element_string).click()
     time.sleep(3)
     r = render_page(driver.current_url)
     soup = BeautifulSoup(r, "html.parser")
-    tuple = scrapePrice()
-    sumTotal += tuple[0]
-    itemsTotal += tuple[1]
-    priceListTotal += tuple[2]
-    manufacturerListTotal += tuple[3]
-    modelListTotal += tuple[4]
-    mileageListTotal += tuple[5]
-    yearManufacturedListTotal += tuple[6]
-    datetimeListTotal += tuple[7]
+    tuple = scrape()
+    sum_total += tuple[0]
+    items_total += tuple[1]
+    price_list_total += tuple[2]
+    manufacturer_list_total += tuple[3]
+    model_list_total += tuple[4]
+    mileage_list_total += tuple[5]
+    year_manufactured_list_total += tuple[6]
+    datetime_list_total += tuple[7]
 
 driver.quit()
 
-average = sumTotal / itemsTotal
+average = sum_total / items_total
 
-print("Items: " + str(itemsTotal))
-print("Min: " + str(min(priceListTotal)))
-print("Max: " + str(max(priceListTotal)))
+print("Items: " + str(items_total))
+print("Min: " + str(min(price_list_total)))
+print("Max: " + str(max(price_list_total)))
 print("Average: " + str(average))
 if average > 100000:
   print("Nikdy na to nebudes mit prachy voe")
