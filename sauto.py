@@ -59,7 +59,7 @@ def scrapePrice():
     mileageList = []
     yearManufacturedList = []
     datetimeList = []
-    for i in soup.select('.price strong'):
+    for i in soup.select('.price strong:not(#pvContent .price strong)'):
         sum += returnInt(i.text)
         manufacturer = driver.find_elements_by_css_selector(".carBoxContent h1")[0].text
         manufacturerList.insert(items, manufacturer)
