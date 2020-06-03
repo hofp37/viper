@@ -8,14 +8,33 @@ import matplotlib.pyplot as plt
 from selenium.common.exceptions import NoSuchElementException        
 from selenium.common.exceptions import StaleElementReferenceException  
 from datetime import datetime      
+from urllib.parse import urlencode
+from constants import Constant
+
 
 # Set headers
 headers = requests.utils.default_headers()
 headers.update(
     {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'})
 
+params = {
+    'category': Constant.category["DEFAULT"],
+    'condition': [
+        Constant.condition["NEW"],
+        Constant.condition["USED"],
+        Constant.condition["DEMO"]
+        ],
+    'priceMax': "",
+    'priceMin': "",
+    'tachometrMax': "",
+    'yearMax': "",
+    'yearMin': "",
+    'manufacturer': Constant.manufacturer["BMW"],
+    'model': Constant.model["BMW_M3"]
+}
+
 urls = [
-    'https://www.sauto.cz/inzerce/osobni/bmw/m3'
+    'https://www.sauto.cz/osobni/hledani#!' + urlencode(params, doseq=True)
 ]
 
 driver = webdriver.Chrome()
