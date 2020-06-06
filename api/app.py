@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify, render_template, request
 import json
 from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
@@ -40,14 +40,14 @@ def get_all_cars():
    try:
       results = session.query(Sauto).order_by(Sauto.car_id.asc()).all()
       data = [json.loads(json.dumps(SautoDTO(ob).__dict__, default=lambda x: str(x))) for ob in results]
-      response = app.response_class(
-         response=json.dumps(data),
-         status=200,
-         mimetype='application/json'
-      )
-      return response
+      return jsonify(data)
    except NoResultFound:
-      print('No result was found')
-   return 
+      return 'No result was found'
+
+@app.route('/cars/')
+def render():
+   request = get_all_cars()
+   req = request.get_json()
+   return render_template('index.html', data=req)
 
 app.run(port=4996)
