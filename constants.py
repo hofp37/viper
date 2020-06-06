@@ -11,9 +11,15 @@ class Constant:
     }
 
     manufacturer = {
-        'BMW': 5
+        'ASTON-MARTIN': 138,
+        'BMW': 5,
+        'MERCEDES-BENZ': 51
     }
 
     model = {
-        'BMW_M3': 45
+        'ASTON-MARTIN_VANQUISH': 7458,
+        'BMW_M3': 45,
+        'BMW_M4': 6757,
+        'BMW_M5': 1262,
+        'MERCEDES-BENZ_SLS-AMG': 5786
     }
