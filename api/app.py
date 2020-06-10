@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import SQLAlchemyError
 
 app = Flask(__name__)
 Base = declarative_base()
@@ -36,35 +37,40 @@ class SautoDTO:
 
 @app.route('/api/cars/', methods=['GET'])
 def get_cars():
-   brand = request.args.get('brand', None)
-   priceMin = request.args.get('priceMin', None)
-   priceMax = request.args.get('priceMax', None)
-   yearMin = request.args.get('yearMin', None)
-   yearMax = request.args.get('yearMax', None)
-   mileageMax = request.args.get('mileageMax', None)
+   try:
+      brand = request.args.get('brand', None)
+      priceMin = request.args.get('priceMin', None)
+      priceMax = request.args.get('priceMax', None)
+      yearMin = request.args.get('yearMin', None)
+      yearMax = request.args.get('yearMax', None)
+      mileageMax = request.args.get('mileageMax', None)
 
-   sent_params = request.args.to_dict()
-   conditions = {
-      'brand': '.filter(Sauto.brand == brand)',
-      'priceMin': '.filter(Sauto.price >= priceMin)',
-      'priceMax': '.filter(Sauto.price <= priceMax)',
-      'yearMin': '.filter(Sauto.year_manufactured >= yearMin)',
-      'yearMax': '.filter(Sauto.year_manufactured <= yearMax)',
-      'mileageMax': '.filter(Sauto.mileage <= mileageMax)'
-   }
+      sent_params = request.args.to_dict()
+      conditions = {
+         'brand': '.filter(Sauto.brand == brand)',
+         'priceMin': '.filter(Sauto.price >= priceMin)',
+         'priceMax': '.filter(Sauto.price <= priceMax)',
+         'yearMin': '.filter(Sauto.year_manufactured >= yearMin)',
+         'yearMax': '.filter(Sauto.year_manufactured <= yearMax)',
+         'mileageMax': '.filter(Sauto.mileage <= mileageMax)'
+      }
 
-   def build_query(params):
-      validated_dict = params.keys() & conditions.keys()
-      filters = ''
-      for param in validated_dict:
-         filters = filters + conditions[param]
-      return 'session.query(Sauto)' + filters + '.order_by(Sauto.car_id.asc())'
+      def build_query(params):
+         validated_dict = params.keys() & conditions.keys()
+         filters = ''
+         for param in validated_dict:
+            filters = filters + conditions[param]
+         return 'session.query(Sauto)' + filters + '.order_by(Sauto.car_id.asc())'
 
-   sql_query = build_query(sent_params)
-   results = eval(sql_query)
-   data = [json.loads(json.dumps(SautoDTO(ob).__dict__, default=lambda x: str(x))) for ob in results]
+      sql_query = build_query(sent_params)
+      results = eval(sql_query)
+      data = [json.loads(json.dumps(SautoDTO(ob).__dict__, default=lambda x: str(x))) for ob in results]
 
-   return jsonify(data)
+      return jsonify(data)
+
+   except SQLAlchemyError as e:
+      print(e)
+      session.rollback()
 
 @app.route('/cars/')
 def render_cars():
