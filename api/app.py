@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, render_template, request
 import json
-from sqlalchemy.orm.exc import NoResultFound
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.orm import sessionmaker
@@ -36,18 +35,42 @@ class SautoDTO:
         self.snaptime = ob.snaptime
 
 @app.route('/api/cars/', methods=['GET'])
-def get_all_cars():
-   try:
-      results = session.query(Sauto).order_by(Sauto.car_id.asc()).all()
-      data = [json.loads(json.dumps(SautoDTO(ob).__dict__, default=lambda x: str(x))) for ob in results]
-      return jsonify(data)
-   except NoResultFound:
-      return 'No result was found'
+def get_cars():
+   brand = request.args.get('brand', None)
+   priceMin = request.args.get('priceMin', None)
+   priceMax = request.args.get('priceMax', None)
+   yearMin = request.args.get('yearMin', None)
+   yearMax = request.args.get('yearMax', None)
+   mileageMax = request.args.get('mileageMax', None)
+
+   sent_params = request.args.to_dict()
+   conditions = {
+      'brand': '.filter(Sauto.brand == brand)',
+      'priceMin': '.filter(Sauto.price >= priceMin)',
+      'priceMax': '.filter(Sauto.price <= priceMax)',
+      'yearMin': '.filter(Sauto.year_manufactured >= yearMin)',
+      'yearMax': '.filter(Sauto.year_manufactured <= yearMax)',
+      'mileageMax': '.filter(Sauto.mileage <= mileageMax)'
+   }
+
+   def build_query(params):
+      validated_dict = params.keys() & conditions.keys()
+      filters = ''
+      for param in validated_dict:
+         filters = filters + conditions[param]
+      return 'session.query(Sauto)' + filters + '.order_by(Sauto.car_id.asc())'
+
+   sql_query = build_query(sent_params)
+   results = eval(sql_query)
+   data = [json.loads(json.dumps(SautoDTO(ob).__dict__, default=lambda x: str(x))) for ob in results]
+
+   return jsonify(data)
 
 @app.route('/cars/')
-def render():
-   request = get_all_cars()
-   req = request.get_json()
+def render_cars():
+   data = get_cars()
+   req = data.get_json()
+
    return render_template('index.html', data=req)
 
 app.run(port=4996)
