@@ -13,7 +13,8 @@ class Constant:
     manufacturer = {
         'ASTON-MARTIN': 138,
         'BMW': 5,
-        'MERCEDES-BENZ': 51
+        'MERCEDES-BENZ': 51,
+        'JAGUAR': 38
     }
 
     model = {
