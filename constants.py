@@ -14,7 +14,13 @@ class Constant:
         'ASTON-MARTIN': 138,
         'BMW': 5,
         'MERCEDES-BENZ': 51,
-        'JAGUAR': 38
+        'JAGUAR': 38,
+        'FERRARI':21,
+        'TESLA':951,
+        'BENTLEY':4,
+        'LAMBORGHINI':141,
+        'PORSCHE':75,
+        'MASERATI':143
     }
 
     model = {
