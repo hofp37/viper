@@ -1,26 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import Cars from './components/cars';
 
-class App extends React.Component {
+class App extends Component {
+  
+  state = {
+    cars: []
+  }
+
+  async componentDidMount() {
+    const response = await fetch('http://127.0.0.1:4996/api/cars/');
+    const json = await response.json();
+    this.setState({ cars: json})
+  }
+  
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Cars cars={this.state.cars} />
     );
   }
 }

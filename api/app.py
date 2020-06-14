@@ -5,8 +5,10 @@ from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+CORS(app)
 Base = declarative_base()
 
 engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/postgres', echo=True)
@@ -36,6 +38,7 @@ class SautoDTO:
         self.snaptime = ob.snaptime
 
 @app.route('/api/cars/', methods=['GET'])
+@cross_origin()
 def get_cars():
    try:
       brand = request.args.get('brand', None)
@@ -73,6 +76,7 @@ def get_cars():
       session.rollback()
 
 @app.route('/cars/')
+@cross_origin()
 def render_cars():
    data = get_cars()
    req = data.get_json()
