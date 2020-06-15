@@ -1,22 +1,53 @@
 import React, { Component } from 'react';
-import Cars from './components/cars';
+import CarsList from './components/CarsList';
+import SearchBox from './SearchBox';
+import loader from './assets/loader.gif';
 
 class App extends Component {
   
-  state = {
-    cars: []
-  }
+  // state = {
+  //   cars: [],
+  //   searchfield: ''
+  // }
 
   async componentDidMount() {
-    const response = await fetch('http://127.0.0.1:4996/api/cars/');
-    const json = await response.json();
-    this.setState({ cars: json})
+    fetch('http://127.0.0.1:4996/api/cars/')
+      .then(response => response.json())
+      .then(cars => {this.setState({ cars: cars})});
+  }
+
+  constructor() {
+    super();
+    this.state = {
+      cars: [],
+      searchfield: ''
+    }
+  }
+
+  onSearchChange = (event) => {
+    this.setState({ searchfield: event.target.value })
   }
   
   render() {
-    return (
-      <Cars cars={this.state.cars} />
-    );
+    const filteredCars = this.state.cars.filter(car => {
+      return car.model.toLowerCase().includes(this.state.searchfield.toLowerCase());
+    })
+
+    if (this.state.cars.length === 0) {
+      return (
+        <div className="tc">
+        <img src={loader} alt="loading"/>
+        </div>
+      )
+    } else {
+      return (
+        <React.Fragment>
+          <center><h1>Cars</h1></center>
+          <SearchBox searchChange={this.onSearchChange} />
+          <CarsList cars={filteredCars} />
+        </React.Fragment>
+      );
+    }
   }
 }
 

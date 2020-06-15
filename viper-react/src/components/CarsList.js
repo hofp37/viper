@@ -33,12 +33,11 @@ const useStyles = makeStyles({
     },
 });
 
-const Cars = ({ cars }) => {
+const CarsList = ({ cars }) => {
     const classes = useStyles();
 
     return (
         <React.Fragment>
-        <center><h1>Cars</h1></center>
         <TableContainer component={Paper}>
             <Table className={classes.table} size="small" aria-label="customized table" align='center'>
                 <TableHead>
@@ -73,4 +72,4 @@ const Cars = ({ cars }) => {
     );
 }
 
-export default Cars;
+export default CarsList;
