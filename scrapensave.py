@@ -26,5 +26,10 @@ for m in models:
         'model': Constant.model[m]
     }
 
+    print('Loading script for: ' + m)
+
     tuple = sauto.get_scraped_results(params)
     load_cars.load_cars_into_db(tuple)
+
+    print('Script done for: ' + m)
+    print('---------------------------')

@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import time
 import selenium
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 import matplotlib.pyplot as plt
 from selenium.common.exceptions import NoSuchElementException        
 from selenium.common.exceptions import StaleElementReferenceException  
@@ -27,7 +28,9 @@ def get_scraped_results(params):
 
     url = 'https://www.sauto.cz/osobni/hledani#!' + urlencode(params, doseq=True)
 
-    driver = webdriver.Chrome()
+    options = Options()
+    options.headless = True
+    driver = webdriver.Chrome(chrome_options=options)
 
     def render_page(url):
         driver.get(url)
