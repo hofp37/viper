@@ -1,9 +1,16 @@
 import sauto
 import load_cars
 from constants import Constant
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 
 # Script for scraping and loading data into DB for all the car models we have in Constant class
 models = Constant.model.keys()
+
+options = Options()
+options.headless = True
+driver = webdriver.Chrome(chrome_options=options)
 
 for m in models:
 
@@ -28,8 +35,10 @@ for m in models:
 
     print('Loading script for: ' + m)
 
-    tuple = sauto.get_scraped_results(params)
+    tuple = sauto.get_scraped_results(params, driver)
     load_cars.load_cars_into_db(tuple)
 
     print('Script done for: ' + m)
     print('---------------------------')
+
+driver.quit()
