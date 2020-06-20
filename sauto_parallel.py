@@ -9,6 +9,8 @@ from selenium.common.exceptions import StaleElementReferenceException
 from datetime import datetime      
 from urllib.parse import urlencode
 from constants import Constant
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 price_list_total = 0
 manufacturer_list_total = []
@@ -17,7 +19,7 @@ mileage_list_total = []
 year_manufactured_list_total = []
 datetime_list_total = []
 
-def get_scraped_results(params, driver):
+def get_scraped_results(params):
 
     # Set headers
     headers = requests.utils.default_headers()
@@ -25,6 +27,10 @@ def get_scraped_results(params, driver):
         {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0'})
 
     url = 'https://www.sauto.cz/osobni/hledani#!' + urlencode(params, doseq=True)
+
+    options = Options()
+    options.headless = True
+    driver = webdriver.Chrome(chrome_options=options)
 
     def render_page(url):
         driver.get(url)
@@ -111,7 +117,7 @@ def get_scraped_results(params, driver):
         year_manufactured_list_total += tuple[6]
         datetime_list_total += tuple[7]
 
-    # driver.quit()
+    driver.quit()
 
     average = sum_total / items_total
 
