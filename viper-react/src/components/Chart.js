@@ -14,26 +14,31 @@ class Chart extends Component {
         fetch('http://127.0.0.1:4996/api/cars/')
         .then(response => response.json())
         .then(cars => {
-            let carName = [];
-            let carAmount = [];
-            cars.forEach(car => {
-                carName.push(car.brand);
-                carAmount.push(car.price);
-            });
+            let labels = [];
+            const distinct = (value, index, self) => self.indexOf(value) === index;
+            let labelsAll = cars.map(car => car.brand);
+            labels = labelsAll.filter(distinct);
+        
+            let bmwList = cars.filter(car => car.brand === 'BMW');
+            let astonMartinList = cars.filter(car => car.brand === 'Aston Martin');
+            let mercedesBenzList = cars.filter(car => car.brand === 'Mercedes-Benz');
+            console.log(cars);
             this.setState({
                 data: {
-                    labels: ['BMW', 'Aston Martin', 'Mercedes-Benz'],
+                    labels: labels,
                     datasets: [{
-                        data: carAmount,
+                        data: [1, astonMartinList.length, bmwList.length, mercedesBenzList.length],
                         backgroundColor: [
-                        '#FF6384',
-                        '#36A2EB',
-                        '#FFCE56'
+                        '#ff6363',
+                        '#ffd863',
+                        '#63ffa4',
+                        '#63b4ff'
                         ],
                         hoverBackgroundColor: [
-                        '#FF6384',
-                        '#36A2EB',
-                        '#FFCE56'
+                        '#ff6363',
+                        '#ffd863',
+                        '#63ffa4',
+                        '#63b4ff'
                         ]
                     }]
                 }
@@ -46,7 +51,7 @@ class Chart extends Component {
             <React.Fragment>
                 <h1>Pie!</h1>
                 <div>
-                    <Pie data={this.state.data} options={{ maintainAspectRatio: false }} />
+                    <Pie data={this.state.data} options={{ maintainAspectRatio: false }} width={400} height={400} />
                 </div>
             </React.Fragment>
             
