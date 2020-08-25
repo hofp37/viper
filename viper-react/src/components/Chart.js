@@ -10,36 +10,54 @@ class Chart extends Component {
         };
     }
 
+    createBrandsList = (labels, cars) => {
+        let brandsList = [];
+        let label;
+
+        for (label of labels) {
+            brandsList.push(cars.filter(car => car.brand === label));
+        }
+        return brandsList;
+    }
+
+    getBrandsListAmounts = (brandsList) => {
+        let brandsListAmounts = [];
+        let brand;
+
+        for (brand of brandsList) {
+            brandsListAmounts.push(brand.length);
+        }
+        return brandsListAmounts
+    }
+
+    dynamicColors = (labels) => {
+        let colorsArray = [];
+
+        for (let i = 0; i < labels.length; i++) {
+            const r = Math.floor(Math.random() * 255);
+            const g = Math.floor(Math.random() * 255);
+            const b = Math.floor(Math.random() * 255);
+            colorsArray.push("rgb(" + r + "," + g + "," + b + ")");
+        }
+        return colorsArray;
+    }
+
     componentDidMount() {
         fetch('http://127.0.0.1:4996/api/cars/')
         .then(response => response.json())
         .then(cars => {
             let labels = [];
             const distinct = (value, index, self) => self.indexOf(value) === index;
-            let labelsAll = cars.map(car => car.brand);
+            const labelsAll = cars.map(car => car.brand);
             labels = labelsAll.filter(distinct);
-        
-            let bmwList = cars.filter(car => car.brand === 'BMW');
-            let astonMartinList = cars.filter(car => car.brand === 'Aston Martin');
-            let mercedesBenzList = cars.filter(car => car.brand === 'Mercedes-Benz');
-            console.log(cars);
+            const brandsList = this.createBrandsList(labels, cars);
+            
             this.setState({
                 data: {
-                    labels: labels,
+                    labels: labelsAll.filter(distinct),
                     datasets: [{
-                        data: [1, astonMartinList.length, bmwList.length, mercedesBenzList.length],
-                        backgroundColor: [
-                        '#ff6363',
-                        '#ffd863',
-                        '#63ffa4',
-                        '#63b4ff'
-                        ],
-                        hoverBackgroundColor: [
-                        '#ff6363',
-                        '#ffd863',
-                        '#63ffa4',
-                        '#63b4ff'
-                        ]
+                        data: this.getBrandsListAmounts(brandsList),
+                        backgroundColor: this.dynamicColors(labels)
                     }]
                 }
             })
