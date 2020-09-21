@@ -40,6 +40,7 @@ class Car extends Component {
           <br/>
           <center><h1>Cars</h1></center>
           <SearchBox searchChange={this.onSearchChange} />
+          <br/>
           <CarsList cars={filteredCars} />
         </React.Fragment>
       );
