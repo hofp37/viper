@@ -26,7 +26,7 @@ class Car extends Component {
   render() {
     const filteredCars = this.state.cars.filter(car => {
       return car.model.toLowerCase().includes(this.state.searchfield.toLowerCase());
-    })
+    });
 
     if (this.state.cars.length === 0) {
       return (
@@ -37,6 +37,7 @@ class Car extends Component {
     } else {
       return (
         <React.Fragment>
+          <br/>
           <center><h1>Cars</h1></center>
           <SearchBox searchChange={this.onSearchChange} />
           <CarsList cars={filteredCars} />
