@@ -29,7 +29,7 @@ def get_scraped_results(params):
     url = 'https://www.sauto.cz/osobni/hledani#!' + urlencode(params, doseq=True)
 
     options = Options()
-    options.headless = True
+    options.headless = False
     driver = webdriver.Chrome(chrome_options=options)
 
     def render_page(url):

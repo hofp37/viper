@@ -68,7 +68,6 @@ class Chart extends Component {
         return (
             <React.Fragment>
                 <br/>
-                <h1>Pie!</h1>
                 <div>
                     <Pie data={this.state.data} options={{ maintainAspectRatio: false }} width={400} height={400} />
                 </div>

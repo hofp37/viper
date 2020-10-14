@@ -4,8 +4,8 @@ import pandas as pd
 def load_cars_into_db(tuple_values):
     
     #QUERY DEFINITION
-    sql_1 = """INSERT INTO cars(id,manufacturer,model,price,mileage,year_manufactured,snaptime) VALUES """
-    sql_3 = "SELECT MAX(id) FROM cars"
+    sql_1 = """INSERT INTO sauto(car_id,brand,model,price,mileage,year_manufactured,snaptime) VALUES """
+    sql_3 = "SELECT MAX(car_id) FROM sauto"
 
     #CAR TO INSERT
     cars = {'manufacturer': tuple_values[0], 'model': tuple_values[1],'price': tuple_values[2],'mileage': tuple_values[3],'year_manufactured': tuple_values[4],'snaptime': tuple_values[5]}
@@ -34,7 +34,7 @@ def load_cars_into_db(tuple_values):
     def check_last_id():
         sql = sql_3
         try:
-            conn = psycopg2.connect(host="localhost",database="sauto", user="postgres", password="postgres")
+            conn = psycopg2.connect(host="localhost",database="postgres", user="postgres", password="postgres")
             # create a new cursor
             cur = conn.cursor()
             # execute the SELECT statement
@@ -58,7 +58,7 @@ def load_cars_into_db(tuple_values):
         conn = None
         sql = sql_1 + car_addition_string(car)
         try:
-            conn = psycopg2.connect(host="localhost",database="sauto", user="postgres", password="postgres")
+            conn = psycopg2.connect(host="localhost",database="postgres", user="postgres", password="postgres")
             # create a new cursor
             cur = conn.cursor()
             # execute the INSERT statement
