@@ -1,2 +1,3 @@
-# viper
-Viper
+# Viper
+
+Viper is a Python-based web scraping project that parellelly scrapes car specific data from the market using Selenium WebDriver. Saves the data into local PostgreSQL database. Presents the data either using Flask templates or a simple React application that requests data through API. Main goal was to have a hands-on experience using these tools and to gather data for further data analysis.
